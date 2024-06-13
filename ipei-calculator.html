@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Edmund's IPEI Calculator</title>
+  </head>
+  <body>
+    <h1>Edmund's DECT IPEI Calcutor</h1>
+    <p>Alcatel DECT phone IPEI addresses are represented as a hexadecimal
+    number on the phone's label, but show as a decimal number when viewing from
+    the "dectsets" command on a PABX. This is not a direct hex to decimal
+    conversion, but rather follows a complicated algorithm for which I have
+    developed a tool to assist in converting addresses to track a known IPEI
+    number against addresses listed on a PABX.</p>
+
+    <h2>Convert hexadecimal label to decimal</h1>
+    <input id="input-hex" type="text"></input>
+    <input id="button-hex" type="button" value="Convert IPEI to Decimal"></input>
+    <p id="result-dec">Result: </p>
+
+    <script>
+    const hexInput = document.getElementById('input-hex');
+    const hexButton = document.getElementById('button-hex');
+    const decResult = document.getElementById('result-dec');
+
+    // convert hex to dec
+    hexButton.addEventListener('click', function() {
+      hex = hexInput.value;
+
+      emc = hex.substring(0, 5);
+      emc = parseInt(emc, 16);
+      emc = emc.toString();
+      emc = emc.padStart(5, "0");
+      
+      psn = hex.substring(5, 10);
+      psn = parseInt(psn, 16);
+      psn = psn.toString();
+      psn = psn.padStart(7, "0");
+
+      dec = emc + "" + psn;
+
+      checksum = 0
+      for (let i = 0; i < dec.length; i++) {
+        checksum += (dec[i] * (i+1));
+      }
+      checksum = checksum % 11;
+
+      dec = dec + "" + checksum;
+
+      decResult.textContent += "" + dec;
+    });
+    </script>
+
+  </body>
+</html>
